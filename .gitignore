@@ -1,6 +1,7 @@
-# Rahasia & data lokal (JANGAN di-commit)
-data/*
-!data/.gitkeep
+# Rahasia & data lokal (JANGAN di-commit): token ada di Config/config.json
+Config/*
+!Config/.gitkeep
+!Config/config.example.json
 .env
 
 # Python
