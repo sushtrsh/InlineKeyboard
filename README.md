@@ -1,71 +1,72 @@
 # InlineKeyboard
 
-Bot Telegram buat bikin command dengan teks dan tombol link (inline keyboard), contohnya `/menu`
-yang nampilin daftar bot/Mini App sebagai grid tombol. Semuanya diatur **langsung dari Telegram**
-atau dari terminal (Termux), dan disimpan di `Config/config.json`.
+A simple Telegram bot for creating commands with text and link buttons (inline keyboards),
+such as a `/menu` that shows a grid of bots or Mini Apps. Everything is managed **directly from
+Telegram** or from the terminal (Termux) and stored in `Config/config.json`.
 
-Pesan yang sudah diposting ke channel/grup **tetap jalan tanpa bot hidup** (tombol link tidak butuh bot).
-Jalankan bot hanya saat mau ngubah daftar, pesan di channel ikut ke-update otomatis.
+Messages already posted to a channel or group **keep working without the bot running** (link
+buttons don't need the bot). Start the bot only when you want to change something, and the
+posted messages are updated automatically.
 
-## Fitur
+## Features
 
-- `/start` nyapa user lalu otomatis nampilin menu (command `menu`, bisa diganti lewat `start_menu` di config)
-- Command buatan admin dengan teks (HTML) + tombol link ke website, `t.me`, dll
-- Editor di Telegram: ganti teks, tambah/hapus tombol, atur jumlah tombol per baris, hapus command
-- **⚡ Cepat**: kirim `Nama | link` (boleh banyak baris), tombol otomatis disusun sesuai tombol per baris
-- Admin yang jalanin command buatan (mis. `/menu`) di chat pribadi dapat tombol **⚙️ Edit**
-- `/post` kirim ke channel/grup, pengiriman kedua meng-**update pesan lama** (bukan pesan baru)
-- Setiap edit di editor otomatis ikut meng-update pesan yang sudah diposting
-- Menu terminal `manage.py`: token, admin, kelola tombol (tambah, hapus, edit, pindah), posting ke channel
-- Menu `/` di Telegram otomatis ikut command buatan (admin dapat menu lengkap)
-- `/id` nampilin User ID dan Chat ID yang bisa disalin dengan sekali tap
+- `/start` greets the user, then shows the menu (the `menu` command, configurable via `start_menu`)
+- Admin-created commands with text (HTML) and link buttons to websites, `t.me` links, and more
+- In-Telegram editor: change the text, add/remove buttons, set buttons per row, delete the command
+- **⚡ Quick add**: send `Name | link` (multiple lines allowed), buttons are laid out automatically
+- Admins who run a custom command (e.g. `/menu`) in private chat get a **⚙️ Edit** button
+- `/post` publishes to a channel or group, and posting again **updates the existing message**
+- Every edit in the editor automatically updates messages already posted to channels
+- Terminal manager (`manage.py`): token, admins, manage buttons (add, delete, edit, move), post to channel
+- The `/` command menu in Telegram syncs automatically (admins get the full menu)
+- `/id` shows your User ID and Chat ID, tap to copy
 
-## Struktur
+## Structure
 
 ```
 InlineKeyboard/
 ├── Src/
-│   ├── bot.py        bot Telegram
-│   ├── manage.py     setup & kelola dari terminal
-│   └── common.py     config dan helper bersama
+│   ├── bot.py        Telegram bot
+│   ├── manage.py     terminal setup & management
+│   └── common.py     shared config and helpers
 ├── Config/
-│   ├── config.example.json   contoh config
-│   └── config.json           dibuat lokal, TIDAK ikut ke GitHub (ada token)
+│   ├── config.example.json   example config
+│   └── config.json           created locally, NOT committed (contains the token)
 ├── requirements.txt
 └── README.md
 ```
 
-## Instalasi
+## Installation
 
 ```bash
 git clone https://github.com/sushitrsh/InlineKeyboard.git
 cd InlineKeyboard
 pip install -r requirements.txt
-python Src/manage.py token <TOKEN_DARI_BOTFATHER>
+python Src/manage.py token <TOKEN_FROM_BOTFATHER>
 ```
 
-Di Termux, kalau belum ada Python: `pkg install python git`.
+On Termux, if Python isn't installed yet: `pkg install python git`.
 
 ## Setup
 
-1. Jalanin bot: `python Src/bot.py`
-2. Chat pribadi ke bot, kirim `/id`, tap angka User ID buat nyalin
-3. Daftarin sebagai admin: `python Src/manage.py add-admin <ID>`, lalu restart bot
+1. Start the bot: `python Src/bot.py`
+2. Open a private chat with the bot, send `/id`, and tap your User ID to copy it
+3. Register yourself as admin: `python Src/manage.py add-admin <ID>`, then restart the bot
 
-Alternatif: semua langkah di atas bisa lewat menu interaktif `python Src/manage.py`.
+You can also do all of this from the interactive menu: `python Src/manage.py`.
 
-## Pemakaian di Telegram (admin, chat pribadi)
+## Usage in Telegram (admin, private chat)
 
-| Command | Fungsi |
+| Command | What it does |
 |---|---|
-| `/inlinekeyboard nama` | Bikin command baru dan langsung buka editornya |
-| `/edit [nama]` | Buka editor command |
-| `/addcmd nama teks` | Bikin command teks biasa |
-| `/delcmd nama` | Hapus command |
-| `/post nama [@channel] [baru]` | Kirim ke channel; kedua kalinya update pesan lama, `baru` = paksa pesan baru |
-| `/batal` | Batalin input yang lagi ditunggu |
+| `/inlinekeyboard name` | Create a new command and open its editor |
+| `/edit [name]` | Open the editor for a command |
+| `/addcmd name text` | Create a plain text command |
+| `/delcmd name` | Delete a command |
+| `/post name [@channel] [new]` | Post to a channel; posting again updates the old message, `new` forces a new message |
+| `/batal` | Cancel the input the bot is waiting for |
 
-Contoh bikin `/menu` lengkap dalam satu pesan:
+Example: create a full `/menu` in a single message:
 
 ```
 /inlinekeyboard menu
@@ -74,53 +75,66 @@ Monkey Coast=https://t.me/MonkeyBot/app ; Dogs=https://t.me/DogsBot/app
 SeedCoin=https://t.me/SeedBot/app
 ```
 
-Baris berisi `Teks=link` jadi satu baris tombol (pisah tombol pakai `;`), baris lain jadi teks pesan.
-Teks pesan boleh HTML (`<b>`, `<i>`, `<a href>`), dan `{first_name}` / `{user_id}` diganti nama user.
+A line containing `Text=link` becomes one row of buttons (separate buttons with `;`). Any other
+line becomes the message text. The text may use HTML (`<b>`, `<i>`, `<a href>`), and
+`{first_name}` / `{user_id}` are replaced with the user's details.
 
-## Pemakaian di terminal
+In the editor, **⚡ Cepat** (quick add) accepts one button per line:
 
-```bash
-python Src/manage.py                      # menu interaktif
-python Src/manage.py token <TOKEN>
-python Src/manage.py add-admin <ID>
-python Src/manage.py chat @namachannel    # tujuan default /post
-python Src/manage.py post menu            # kirim / update /menu ke channel
-python Src/manage.py post menu --new      # paksa pesan baru
-python Src/manage.py import bots.json     # impor daftar format lama jadi /menu
-python Src/manage.py list                 # lihat ringkasan config
+```
+Monkey Coast | https://t.me/MonkeyBot/app
+Dogs | https://t.me/DogsBot/app
 ```
 
-Di menu **Kelola command & tombol** ada tambah, hapus (bisa banyak: `2,4`), edit, pindah urutan,
-ganti teks, dan atur tombol per baris. Setelah selesai, manage.py nawarin update pesan di channel.
+The **🔢** button cycles the number of buttons per row (1 → 2 → 3 → 4).
 
-## Posting ke channel
+## Usage in the terminal
 
-1. Jadiin bot admin channel (izin *Post Messages* dan *Edit Messages*)
-2. `/post menu @namachannel` atau `python Src/manage.py post menu`, lalu pin pesannya
-3. Habis itu bot boleh dimatiin, tombol tetap jalan. Mau ngubah daftar: nyalain bot, edit lewat ⚙️ Edit,
-   pesan di channel ke-update sendiri
+```bash
+python Src/manage.py                      # interactive menu
+python Src/manage.py token <TOKEN>
+python Src/manage.py add-admin <ID>
+python Src/manage.py chat @yourchannel    # default target for /post
+python Src/manage.py post menu            # post / update /menu in the channel
+python Src/manage.py post menu --new      # force a new message
+python Src/manage.py import bots.json     # import an old-format list as /menu
+python Src/manage.py list                 # show a config summary
+```
 
-## Konfigurasi
+The **Manage commands & buttons** menu lets you add, delete (several at once: `2,4`), edit, move,
+change the text, and set buttons per row. When you finish, `manage.py` offers to update the
+message in your channel.
+
+## Posting to a channel
+
+1. Make the bot an admin of the channel (*Post Messages* and *Edit Messages* permissions)
+2. Run `/post menu @yourchannel` or `python Src/manage.py post menu`, then pin the message
+3. After that you can stop the bot, the buttons keep working. To change the list, start the bot,
+   edit via ⚙️ Edit, and the channel message updates by itself
+
+## Configuration
 
 `Config/config.json`:
 
-| Key | Isi |
+| Key | Description |
 |---|---|
-| `token` | Token dari [@BotFather](https://t.me/BotFather) |
-| `admin_ids` | Daftar User ID admin |
-| `chat_id` | Tujuan default posting (`@channel` atau `-100...`) |
-| `start_text` | Teks sapaan `/start` |
-| `start_menu` | Command yang ditampilin setelah `/start` (default `menu`, kosongin buat nonaktif) |
-| `commands` | Command buatan (teks, `per_row`, `buttons`) |
-| `posts` | Dicatat otomatis: pesan yang sudah diposting ke channel |
+| `token` | Bot token from [@BotFather](https://t.me/BotFather) |
+| `admin_ids` | List of admin User IDs |
+| `chat_id` | Default posting target (`@channel` or `-100...`) |
+| `start_text` | Greeting sent by `/start` |
+| `start_menu` | Command shown after `/start` (default `menu`, set to `""` to disable) |
+| `commands` | Custom commands (`text`, `per_row`, `buttons`) |
+| `posts` | Tracked automatically: messages already posted to channels |
 
-Bisa juga lewat environment variable `TOKEN` dan `ADMINS` (pisah koma), berguna buat Codespaces atau server.
+You can also use the `TOKEN` and `ADMINS` (comma-separated) environment variables, handy for
+Codespaces or a server.
 
-## Catatan
+## Notes
 
-- Command admin hanya jalan di chat pribadi dengan admin. Tombol editor di grup/channel ditolak buat non-admin.
-- Kalau respon bot lambat atau sering putus di jaringan HP, jalanin dengan `NET_TWEAKS=1 python Src/bot.py`
-  (paksa IPv4, matiin keep-alive). Error jaringan sesaat otomatis dicoba ulang.
-- Di Termux, nyalain wakelock (`termux-wake-lock`) dan set baterai Termux ke *Unrestricted*. Kalau bot ke-kill
-  setelah ngubah setelan sistem, buka ulang Termux.
-- Token bocor? Revoke lewat @BotFather → `/mybots` → pilih bot → *API Token* → *Revoke current token*.
+- Admin commands only work in a private chat with an admin. Editor buttons are rejected for non-admins.
+- If the bot is slow or the connection drops often on mobile data, run
+  `NET_TWEAKS=1 python Src/bot.py` (forces IPv4 and disables keep-alive). Short network errors are retried automatically.
+- On Termux, enable the wakelock (`termux-wake-lock`) and set Termux battery usage to *Unrestricted*.
+  If the bot gets killed after changing system settings, reopen Termux.
+- Old configs that still have a `list` command are migrated to `menu` automatically.
+- Token leaked? Revoke it via @BotFather → `/mybots` → pick the bot → *API Token* → *Revoke current token*.
