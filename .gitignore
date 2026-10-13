@@ -1,0 +1,10 @@
+# Rahasia & data lokal (JANGAN di-commit)
+data/*
+!data/.gitkeep
+.env
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
