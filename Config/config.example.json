@@ -1,0 +1,19 @@
+{
+  "token": "ISI_TOKEN_DARI_BOTFATHER",
+  "admin_ids": [123456789],
+  "chat_id": "@namachannel",
+  "start_text": "Halo <b>{first_name}</b>! 👋",
+  "start_menu": "menu",
+  "commands": {
+    "menu": {
+      "text": "Menu",
+      "per_row": 3,
+      "buttons": [
+        [
+          { "text": "Contoh Bot", "url": "https://t.me/UsernameBot/NamaApp" },
+          { "text": "Website", "url": "https://example.com" }
+        ]
+      ]
+    }
+  }
+}
